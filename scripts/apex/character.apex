@@ -1,9 +1,10 @@
 
-String s = '(Hello, World)!';
-string copy = '';
+String s = '()!<>=';
+Integer[] characters = s.getChars();
+characters.add(0);
 
-for (Integer i = 0; i < s.length(); i++) {
-    System.debug(s.charAt(i));
+for (Integer i = 0; i < characters.size(); i++) {
+    System.debug(String.format('index:{0} char:{1} value:{2}', new List<Object> {
+        i, String.fromCharArray(new List<Integer> { characters[i] }), characters[i]
+    }));
 }
-
-System.debug(s.substring(0, 1));

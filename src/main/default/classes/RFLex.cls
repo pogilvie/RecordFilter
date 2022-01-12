@@ -1,10 +1,4 @@
 public with sharing class RFLex {
-    static final Integer LEFT_PAREN_CHAR = Integer.valueOf('(');
-    static final Integer RIGHT_PAREN_CHAR = Integer.valueOf(')');
-    static final Integer EQUAL_CHAR = Integer.valueOf('=');
-    static final Integer BANG_CHAR = Integer.valueOf('!');
-    static final Integer LESS_THAN_CHAR = Integer.valueOf('<');
-    static final Integer GREATER_THAN_CHAR = Integer.valueOf('<');
 
     final String source;
     final Integer[] characters;
@@ -26,11 +20,40 @@ public with sharing class RFLex {
         while (!isAtEnd()) {
             start = current;
             Integer c = advance();
+            switch on c {
+                when 33 {
+                    addToken(RFToken.TokenType.BANG);
+                }
+                when 40 {
+                    addToken(RFToken.TokenType.LEFT_PAREN);
+                }
+                when 41 {
+                    addToken(RFToken.TokenType.RIGHT_PAREN);
+                }
+                when 60 {
+                    addToken(RFToken.TokenType.LESS);
+                }
+                when 61 {
+                    addToken(RFToken.TokenType.EQUAL);
+                }
+                when 62 {
+                    addToken(RFToken.TokenType.GREATER);
+                } when else {
+                    System.debug('Ilegal Chaaracter: ' + c);
+                }
+            }
         }
 
         return null;
     }
 
     Boolean isAtEnd() { return current >= characters.size(); }
-    Integer advance() { return 0; }
+    Integer advance() { return characters[current++]; }
+
+    void addToken(RFToken.TokenType type) { addToken(type, null); }
+
+    void addToken(RFToken.TokenType type, Object literal) {
+        String text = source.substring(start, current);
+        tokens.add(new RFToken(type, text, literal, line));
+    }
 }

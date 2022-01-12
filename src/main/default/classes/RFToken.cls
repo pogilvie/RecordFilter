@@ -26,7 +26,7 @@ public class RFToken {
     final Object literal;
     final Integer line; // [location]
 
-    RFToken(TokenType type, String lexeme, Object literal, Integer line) {
+    public RFToken(TokenType type, String lexeme, Object literal, Integer line) {
         this.type = type;
         this.lexeme = lexeme;
         this.literal = literal;
