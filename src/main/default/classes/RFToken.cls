@@ -1,29 +1,29 @@
 public class RFToken {
 
     public enum TokenType { 
-        LEFT_PAREN, 
-        RIGHT_PAREN, 
-        BANG, 
+        LEFT_PAREN,
+        RIGHT_PAREN,
+        BANG,
         BANG_EQUAL,
-        EQUAL, 
-        GREATER, 
+        EQUAL,
+        GREATER,
         GREATER_EQUAL,
-        LESS, 
+        LESS,
         LESS_EQUAL,
-        IDENTIFIER, 
-        STR, 
-        NUM, 
-        AND_OP, 
-        FALSE_VALUE, 
-        TRUE_VALUE, 
-        NULL_VALUE, 
+        IDENTIFIER,
+        STR,
+        NUM,
+        AND_OP,
+        FALSE_VALUE,
+        TRUE_VALUE,
+        NULL_VALUE,
         OR_OP,
         EOF
     }
 
-    final TokenType type;
-    final String lexeme;
-    final Object literal;
+    public final TokenType type;
+    public final String lexeme;
+    public final Object literal;
     final Integer line; // [location]
 
     public RFToken(TokenType type, String lexeme, Object literal, Integer line) {

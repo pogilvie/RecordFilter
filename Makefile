@@ -5,6 +5,9 @@ push:
 pull:
 	sfdx force:source:pull -u recordfilter
 
+open:
+	sfdx force:org:open -b chrome -u recordfilter 
+
 scratch:
 	sfdx force:org:create -f config/scratch.json -a recordfilter -v dev
 
