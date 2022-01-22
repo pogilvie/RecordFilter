@@ -12,7 +12,8 @@ public with sharing class RFLex {
         'and' => RFToken.TokenType.AND_OP,
         'or' => RFToken.TokenType.OR_OP,
         'true' => RFToken.TokenType.TRUE_VALUE,
-        'false' => RFToken.TokenType.FALSE_VALUE
+        'false' => RFToken.TokenType.FALSE_VALUE,
+        'null' => RFToken.TokenType.NULL_VALUE
     };
 
     static Boolean hadError = false;

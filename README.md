@@ -24,6 +24,21 @@ Use of this facility is planned in conjection with the trigger action framework
 to save the cost of invoking flow action for records in which the flow is not
 targeted.
 
+## Grammer †
+(borrowed / copied from lox () Robert Nystrom)
+
+expression    -> logical_or ;
+logical_or    -> logical_and { "or" logical_and } ;
+logical_and   -> equality { "and" equality }
+equality      -> comparison { [] "!=" | "=" ] comparison } ;
+comparison    -> unary { [ ">" | ">=" | "<" | "<=" ] unary } ;
+unary         -> [ "!" | "-" ] primary ;
+primary       -> "true" | "false" | "null" | NUM | STR | IDENTIFIER | "(" expression ")"
+
+RecordType = 'Support
+
+† Missing built in support in the example above
+  
 
 ## Open Issues
 1. What should the semantics be if the caller does not have access to the field
