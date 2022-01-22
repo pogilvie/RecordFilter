@@ -2,6 +2,9 @@
 push:
 	sfdx force:source:push -u recordfilter
 
+force:
+	sfdx force:source:push  -f -u recordfilter
+
 pull:
 	sfdx force:source:pull -u recordfilter
 

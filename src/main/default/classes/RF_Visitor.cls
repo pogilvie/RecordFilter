@@ -9,7 +9,7 @@ public class RF_Visitor {
 
     public void run(String source) {
         init();
-        List<RFToken> tokens = new RFLex(source).scann();
+        List<RF_Token> tokens = new RF_Lex(source).scann();
         List<RF_Node> nodes = new RF_Parser(tokens).parse();
         for (RF_Node node : nodes) {
             visit(node);

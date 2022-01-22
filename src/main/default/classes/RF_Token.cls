@@ -1,6 +1,6 @@
-public class RFToken {
+public class RF_Token {
 
-    public enum TokenType { 
+    public enum Type { 
         LEFT_PAREN,
         RIGHT_PAREN,
         BANG,
@@ -21,12 +21,12 @@ public class RFToken {
         EOF
     }
 
-    public final TokenType type;
+    public final Type type;
     public final String lexeme;
     public final Object literal;
     final Integer line; // [location]
 
-    public RFToken(TokenType type, String lexeme, Object literal, Integer line) {
+    public RF_Token(Type type, String lexeme, Object literal, Integer line) {
         this.type = type;
         this.lexeme = lexeme;
         this.literal = literal;

@@ -1,17 +1,17 @@
-@isTest class RFLexTest {
+@isTest class RF_LexTest {
 
     @isTest static void symbols() {
-        RFLex lex = new RFLex('()!<=>');
-        List<RFToken> tokens = lex.scann();
+        RF_Lex lex = new RF_Lex('()!<=>');
+        List<RF_Token> tokens = lex.scann();
 
-        for (RFToken token : tokens) {
+        for (RF_Token token : tokens) {
             System.debug(token);
         }
     }
 
     @isTest static void illegalSymbol() {
-        RFLex lex = new RFLex('(#)');
-        List<RFToken> tokens = lex.scann();
+        RF_Lex lex = new RF_Lex('(#)');
+        List<RF_Token> tokens = lex.scann();
     }
 
     @isTest static void comment() {
@@ -21,50 +21,50 @@
             '<=> // end of line comment'
         };
         String source = String.join(lines, ' ');
-        RFLex lex = new RFLex(source);
-        List<RFToken> tokens = lex.scann();
+        RF_Lex lex = new RF_Lex(source);
+        List<RF_Token> tokens = lex.scann();
 
-        for (RFToken token : tokens) {
+        for (RF_Token token : tokens) {
             System.debug(token);
         }
     }
 
     @isTest static void illegalComment() {
-        RFLex lex = new RFLex('/ illegal comment');
-        List<RFToken> tokens = lex.scann();
+        RF_Lex lex = new RF_Lex('/ illegal comment');
+        List<RF_Token> tokens = lex.scann();
     }
 
     @isTest static void string() {
-        RFLex lex = new RFLex('"Hello, World!"');
-        List<RFToken> tokens = lex.scann();
+        RF_Lex lex = new RF_Lex('"Hello, World!"');
+        List<RF_Token> tokens = lex.scann();
         
-        for (RFToken token : tokens) {
+        for (RF_Token token : tokens) {
             System.debug(token);
-            System.assertEquals(token.type, RFToken.TokenType.STR);
+            System.assertEquals(token.type, RF_Token.Type.STR);
             System.assertEquals(token.lexeme, '"Hello, World!"');
             System.assertEquals(token.literal, 'Hello, World!');
         }
     }
 
     @isTest static void unterminatedString() {
-        RFLex lex = new RFLex('"Hello, World!');
-        List<RFToken> tokens = lex.scann();
+        RF_Lex lex = new RF_Lex('"Hello, World!');
+        List<RF_Token> tokens = lex.scann();
     }
 
     @isTest static void number() {
-        RFLex lex = new RFLex('10 3.14159');
-        List<RFToken> tokens = lex.scann();
-        for (RFToken token : tokens) {
+        RF_Lex lex = new RF_Lex('10 3.14159');
+        List<RF_Token> tokens = lex.scann();
+        for (RF_Token token : tokens) {
             System.debug(token);
-            System.assertEquals(token.type, RFToken.TokenType.NUM);
+            System.assertEquals(token.type, RF_Token.Type.NUM);
         }
     }
 
     @isTest static void lexemes() {
         String source = '!() <!=<=>=> "Hello!" OR AND TRUE false !hello 10 3.14';
-        RFLex lex = new RFLex(source);
-        List<RFToken> tokens = lex.scann();
-        for (RFToken token : tokens) {
+        RF_Lex lex = new RF_Lex(source);
+        List<RF_Token> tokens = lex.scann();
+        for (RF_Token token : tokens) {
             System.debug(token);
         }
         System.assertEquals(tokens[0].type.name(), 'BANG');

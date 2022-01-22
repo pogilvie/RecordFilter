@@ -1,8 +1,8 @@
 public with sharing class RF_Parser {
-    public List<RFToken> tokens;
+    public List<RF_Token> tokens;
     public Integer index = 0;
 
-    public RF_Parser(List<RFToken> tokens) {
+    public RF_Parser(List<RF_Token> tokens) {
         this.tokens = tokens;
     }
 
@@ -14,8 +14,8 @@ public with sharing class RF_Parser {
         return null;
     }
 
-    public RFToken consume(String type) {
-        RFToken currentToken = current();
+    public RF_Token consume(String type) {
+        RF_Token currentToken = current();
         if (currentToken == null) {
             return null;
         }
@@ -26,27 +26,27 @@ public with sharing class RF_Parser {
         return null;
     }
 
-    public RFToken current() {
+    public RF_Token current() {
         if (tokens.size() == index) return null;
 
         return tokens[index];
     }
 
-    public RFToken current(String type) {
-        RFToken token = current();
+    public RF_Token current(String type) {
+        RF_Token token = current();
         if (token != null && token.type.name() == type) return token;
 
         return null;
     }
 
-    public RFToken peek() {
+    public RF_Token peek() {
         if (tokens.size() <= index + 1) return null;
 
         return tokens[index + 1];
     }
 
-    public RFToken peek(String type) {
-        RFToken token = peek();
+    public RF_Token peek(String type) {
+        RF_Token token = peek();
         if (token != null && token.type.name() == type) return token;
         
         return null;

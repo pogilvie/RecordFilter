@@ -30,9 +30,9 @@ F -> ID | Integer | ( E ) | -F
 
 
 
-E -> T { AND T }
-T -> F { OR F }
-F -> "true" | "false" | "(" E ")" | "!"F
+E -> T { AND | OR T }
+T -> "true" | "false" | "(" E ")" 
 
 
-Given (true AND false) OR false
+Given
+(true AND false) OR false

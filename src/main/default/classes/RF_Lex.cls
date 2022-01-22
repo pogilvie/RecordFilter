@@ -1,29 +1,29 @@
-public with sharing class RFLex {
+public with sharing class RF_Lex {
 
     final String source;
     final Integer[] characters;
-    final List<RFToken> tokens = new List<RFToken>();
+    final List<RF_Token> tokens = new List<RF_Token>();
 
     Integer start = 0;
     Integer current = 0;
     Integer line = 1;
 
-    Map<String, RFToken.TokenType> keywords = new Map<StRing, RFToken.TokenType> {
-        'and' => RFToken.TokenType.AND_OP,
-        'or' => RFToken.TokenType.OR_OP,
-        'true' => RFToken.TokenType.TRUE_VALUE,
-        'false' => RFToken.TokenType.FALSE_VALUE,
-        'null' => RFToken.TokenType.NULL_VALUE
+    Map<String, RF_Token.Type> keywords = new Map<StRing, RF_Token.Type> {
+        'and' => RF_Token.Type.AND_OP,
+        'or' => RF_Token.Type.OR_OP,
+        'true' => RF_Token.Type.TRUE_VALUE,
+        'false' => RF_Token.Type.FALSE_VALUE,
+        'null' => RF_Token.Type.NULL_VALUE
     };
 
     static Boolean hadError = false;
 
-    public RFLex(String source) {
+    public RF_Lex(String source) {
         this.source = source;
         characters = source.getChars();
     }
 
-    public List<RFtoken> scann() {
+    public List<RF_token> scann() {
 
         while (!isAtEnd()) {
             start = current;
@@ -38,18 +38,18 @@ public with sharing class RFLex {
                 when 33 {  // ! OR !=
                     addToken(
                         match(61) ? 
-                        RFToken.TokenType.BANG_EQUAL :
-                        RFToken.TokenType.BANG
+                        RF_Token.Type.BANG_EQUAL :
+                        RF_Token.Type.BANG
                     );
                 }
                 when 34 { // double quoate " for start of string
                     string();
                 }
                 when 40 {
-                    addToken(RFToken.TokenType.LEFT_PAREN);
+                    addToken(RF_Token.Type.LEFT_PAREN);
                 }
                 when 41 {
-                    addToken(RFToken.TokenType.RIGHT_PAREN);
+                    addToken(RF_Token.Type.RIGHT_PAREN);
                 }
                 when 47 { // '/' comment
                     if (match(47)) {
@@ -61,18 +61,18 @@ public with sharing class RFLex {
                 when 60 {  // < OR <=
                     addToken(
                         match(61) ? 
-                        RFToken.TokenType.LESS_EQUAL :
-                        RFToken.TokenType.LESS
+                        RF_Token.Type.LESS_EQUAL :
+                        RF_Token.Type.LESS
                     );
                 }
                 when 61 {
-                    addToken(RFToken.TokenType.EQUAL);
+                    addToken(RF_Token.Type.EQUAL);
                 }
                 when 62 {
                     addToken(
                         match(61) ? 
-                        RFToken.TokenType.GREATER_EQUAL :
-                        RFToken.TokenType.GREATER
+                        RF_Token.Type.GREATER_EQUAL :
+                        RF_Token.Type.GREATER
                     );
                 } when else {
                     if (isDigit(c)) {
@@ -92,11 +92,11 @@ public with sharing class RFLex {
     Boolean isAtEnd() { return current >= characters.size(); }
     Integer advance() { return characters[current++]; }
 
-    void addToken(RFToken.TokenType type) { addToken(type, null); }
+    void addToken(RF_Token.Type type) { addToken(type, null); }
 
-    void addToken(RFToken.TokenType type, Object literal) {
+    void addToken(RF_Token.Type type, Object literal) {
         String text = source.substring(start, current);
-        tokens.add(new RFToken(type, text, literal, line));
+        tokens.add(new RF_Token(type, text, literal, line));
     }
 
     void report(Integer c) {
@@ -134,7 +134,7 @@ public with sharing class RFLex {
         // the closing "
         advance();
         String value = source.substring(start + 1, current - 1);
-        addToken(RFToken.TokenType.STR, value);
+        addToken(RF_Token.Type.STR, value);
     }
 
     Boolean isDigit(Integer c) {
@@ -159,7 +159,7 @@ public with sharing class RFLex {
 
         while (isDigit(peek())) advance();
 
-        addToken(RFToken.TokenType.NUM, Decimal.ValueOf(source.substring(start, current)));
+        addToken(RF_Token.Type.NUM, Decimal.ValueOf(source.substring(start, current)));
     }
 
     Boolean isAlpha (Integer c) {
@@ -178,10 +178,10 @@ public with sharing class RFLex {
         while (isAlphaNumeric(peek())) advance();
 
         String word = source.substring(start, current);
-        RFTOken.TokenType type = keywords.get(word.toLowerCase());
+        RF_Token.Type type = keywords.get(word.toLowerCase());
 
         if (type == null) {
-            type = RFToken.TokenType.IDENTIFIER;
+            type = RF_Token.Type.IDENTIFIER;
         }
 
         addToken(type);
