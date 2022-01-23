@@ -18,6 +18,10 @@ public class RF_Token {
         TRUE_VALUE,
         NULL_VALUE,
         OR_OP,
+        ADD,
+        SUB,
+        MULT,
+        DIV,
         EOF
     }
 

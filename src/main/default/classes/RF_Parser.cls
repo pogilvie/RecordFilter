@@ -14,13 +14,7 @@ public with sharing class RF_Parser {
 
     public Boolean expression() {
 
-        RF_Token current = current();
-        if (current != null) {
-            Boolean result = term();
-
-            while (current())
-        }
-
+      return null;
         
     }
 

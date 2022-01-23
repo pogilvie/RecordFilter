@@ -51,11 +51,20 @@ public with sharing class RF_Lex {
                 when 41 {
                     addToken(RF_Token.Type.RIGHT_PAREN);
                 }
+                when 42 {
+                    addToken(RF_Token.Type.MULT);
+                }
+                when 43 {
+                    addToken(RF_Token.Type.ADD);
+                }
+                when 45 {
+                    addToken(RF_Token.Type.SUB);
+                }
                 when 47 { // '/' comment
                     if (match(47)) {
                         while (peek() != 10 && !isAtEnd()) advance();
                     } else {
-                        report(c);
+                        addToken(RF_Token.Type.DIV);
                     }
                 }
                 when 60 {  // < OR <=

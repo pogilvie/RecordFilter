@@ -1,5 +1,5 @@
 
-String s = '()!<>=';
+String s = '()!<>=+-*/';
 Integer[] characters = s.getChars();
 characters.add(0);
 
