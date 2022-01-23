@@ -2,24 +2,38 @@ public with sharing class RF_Parser {
     public List<RF_Token> tokens;
     public Integer index = 0;
 
+    class RF_ParserException extends Exception { }
+
     public RF_Parser(List<RF_Token> tokens) {
         this.tokens = tokens;
     }
 
-    public List<RF_Node> parse() {
+    public Boolean parse() {
         return expression();
     }
 
-    public List<RF_Node> expression() {
+    public Boolean expression() {
+
+        RF_Token current = current();
+        if (current != null) {
+            Boolean result = term();
+
+            while (current())
+        }
+
+        
+    }
+
+    public Boolean term() {
         return null;
     }
 
-    public RF_Token consume(String type) {
+    public RF_Token consume(List<RF_Token.Type> types) {
         RF_Token currentToken = current();
         if (currentToken == null) {
             return null;
         }
-        if (currentToken.type.name() == type) {
+        if (types.contains(currentToken.type)) {
             index++;
             return currentToken;
         } 

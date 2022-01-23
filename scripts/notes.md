@@ -36,3 +36,6 @@ T -> "true" | "false" | "(" E ")"
 
 Given
 (true AND false) OR false
+
+
+https://unnikked.ga/how-to-evaluate-a-boolean-expression/

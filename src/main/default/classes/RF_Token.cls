@@ -34,6 +34,9 @@ public class RF_Token {
     }
 
     public override String toString() {
-        return type + ' ' + lexeme + ' ' + literal;
+        if (literal == null) 
+            return type.name();
+        else
+            return type + ' ' + lexeme + ' ' + literal;
     }
 }

@@ -85,7 +85,7 @@ public with sharing class RF_Lex {
                 }
             }
         }
-
+        addToken(RF_Token.Type.EOF);
         return tokens;
     }
 
