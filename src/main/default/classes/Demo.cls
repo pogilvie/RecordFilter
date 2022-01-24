@@ -1,6 +1,7 @@
 public class Demo {
 
     public final List<RF_Token> tokens;
+    RF_Stack stack = new RF_Stack();
     public Integer index = 0;
     Integer counter = 0;
 
@@ -17,6 +18,7 @@ public class Demo {
     // terminals { ID, CONST, (, ), +, -, *, /, ;, =}
 
     public void parse() {
+        RF_Stack stack;
         System.debug(tokens);
         assignment();
     }
@@ -39,6 +41,7 @@ public class Demo {
         match(RF_Token.Type.EQUAL);
         expression();
         match(RF_Token.Type.EOF);
+        stack.print();
     }
 
     // <expression> --> <term> ( ('+'|'-') <term> )*
@@ -46,8 +49,21 @@ public class Demo {
         recursionCheck();
         term();
         while (isTermOperator()) {
+            Decimal left = stack.pop().toNumberVal();
+            RF_Token.type operator = peek().type;
             match(peek().type);
             term();
+            Decimal right = stack.pop().toNumberVal();
+            Decimal result;
+            switch on operator {
+                when ADD {
+                    result = left + right;
+                }
+                when SUB {
+                    result = left - right;
+                }
+            }
+            stack.push(new RF_Value(RF_Value.Type.NUM, result));
         }
     }
 
@@ -55,8 +71,21 @@ public class Demo {
     void term() {
         factor();
         while (isFactorOperator()) {
+            Decimal left = stack.pop().toNumberVal();
+            RF_Token.type operator = peek().type;
             match(peek().type);
             factor();
+            Decimal right = stack.pop().toNumberVal();
+            Decimal result;
+            switch on operator {
+                when MULT {
+                    result = left * right;
+                }
+                when DIV {
+                    result = left / right;
+                }
+            }
+            stack.push(new RF_Value(RF_Value.Type.NUM, result));
         }
     }
 
@@ -66,9 +95,11 @@ public class Demo {
         switch on token.type {
             when IDENTIFIER {
                 match(RF_Token.Type.IDENTIFIER);
+                stack.push(new RF_Value(RF_Value.Type.STR, token.literal));
             }
             when NUM {
                 match(RF_Token.Type.NUM);
+                stack.push(new RF_Value(RF_Value.Type.NUM, token.literal));
             }
             when LEFT_PAREN {
                 match(RF_Token.Type.LEFT_PAREN);

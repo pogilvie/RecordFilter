@@ -20,4 +20,8 @@ list:
 character:
 	sfdx force:apex:execute -f scripts/apex/character.apex -u dev
 
+debug:
+	sfdx force:apex:log:tail -u recordfilter | grep DEBUG
+
+
 
