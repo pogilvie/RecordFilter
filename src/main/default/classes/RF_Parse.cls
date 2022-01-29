@@ -1,6 +1,6 @@
 public with sharing class RF_Parse {
     RF_Stack stack = new RF_Stack();
-    public List<RF_Token> tokens;
+    final public List<RF_Token> tokens;
     public Integer index = 0;
     Integer counter = 0;
 
@@ -10,26 +10,38 @@ public with sharing class RF_Parse {
         this.tokens = tokens;
     }
 
-    public void parse() {
+    public RF_Value parse() {
         expression();
         stack.print();
+        return stack.pop();
     }
 
 
     // <expression> --> <term> ( ('AND'|'OR') <term> )*
     // <term> --> <comparison> ( ('='|'!='|'<'|''>'|'<='|>=) <comparison> )*
     // <comparison> --> ID | CONST | '(' <expression> ')'
-    // terminals { ID, CONST, (, ), +, -, *, /, ;, =}
-    
-    
+    // terminals { ID, CONST, (, ) }
     
     // <expression> --> <term> ( ('AND'|'OR') <term> )*
     public void expression() {
         recursionCheck();
         term();
         while (isTermOperator()) {
+            Boolean left = stack.pop().toBooleanVal();
             RF_Token token = advance();
             term();
+            Boolean right = stack.pop().toBooleanVal();
+
+            Boolean result;
+            switch on token.type {
+                when AND_OP {
+                    result = left && right;
+                }
+                when OR_OP {
+                    result = left || right;
+                }
+            }
+            stack.push(new RF_Value(RF_Value.Type.BOOL, result));
         }
     }
 
@@ -37,14 +49,39 @@ public with sharing class RF_Parse {
     public void term() {
         comparison();
         while (isComparisonOperator()) {
+            Decimal left = stack.pop().toNumberVal();
             RF_Token token = advance();
             comparison();
+            Decimal right = stack.pop().toNumberVal();
+
+            Boolean result;
+            switch on token.type {
+                when EQUAL {
+                    result = left == right;
+                }
+                when BANG_EQUAL {
+                    result = left != right;
+                }
+                when LESS {
+                    result = left < right;
+                }
+                when GREATER {
+                    result = left > right;
+                }
+                when LESS_EQUAL {
+                    result = left <= right;
+                }
+                when GREATER_EQUAL {
+                    result = left >= right;
+                }
+            }
+            stack.push(new RF_Value(RF_Value.Type.BOOL, result));
         }
     }
 
     // <comparison> --> ID | CONST | '(' <expression> ')'
     public void comparison() {
-        RF_Token token = peek();
+        RF_Token token = current();
         switch on token.type {
             when IDENTIFIER {
                 match(RF_Token.Type.IDENTIFIER);
@@ -54,6 +91,14 @@ public with sharing class RF_Parse {
                 match(RF_Token.Type.NUM);
                 stack.push(new RF_Value(RF_Value.Type.NUM, token.literal));
             }
+            when TRUE_VALUE {
+                match(RF_Token.Type.TRUE_VALUE);
+                stack.push(new RF_Value(RF_Value.Type.BOOL, true));
+            }
+            when FALSE_VALUE {
+                match(RF_Token.Type.FALSE_VALUE);
+                stack.push(new RF_Value(RF_Value.Type.BOOL, false));
+            }
             when LEFT_PAREN {
                 match(RF_Token.Type.LEFT_PAREN);
                 expression();
@@ -61,7 +106,7 @@ public with sharing class RF_Parse {
             }
             when else {
                 throw new RF_ParseException(
-                    String.format('factor expecting token: {0}', new List<Object> { token.type.name() })
+                    String.format('comparison unexpected token: {0}', new List<Object> { token.type.name() })
                 );
             } 
         }

@@ -27,5 +27,14 @@ public class RF_Value {
         }
     }
 
+    public Boolean toBooleanVal() {
+        switch on type {
+            when BOOL { return (Boolean)value; }
+            when else { 
+                throw new RF_ValueException('Cannot convert type ' + type.name() + ' to boolean');
+            }
+        }
+    }
+
 
 }
