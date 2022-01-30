@@ -11,8 +11,8 @@ Create a new field on a custom metadata object
 Trigger_Action__md.filter__c of type long text area
 
 ```
-    RecordType == 'Support' AND
-    Origin == 'Web' AND
+    RecordType = 'Support' AND
+    Origin = 'Web' AND
     ISCHANGED(SuppliedEmail)
 ```
 Where Origin and SupppliedEmail are fields on the Case SObject.  RecordType is a
@@ -27,18 +27,13 @@ targeted.
 ## Grammer †
 (borrowed / copied from lox () Robert Nystrom)
 
-expression    -> logical_or ;
-logical_or    -> logical_and { "or" logical_and } ;
-logical_and   -> equality { "and" equality }
-equality      -> comparison { [] "!=" | "=" ] comparison } ;
-comparison    -> unary { [ ">" | ">=" | "<" | "<=" ] unary } ;
-unary         -> [ "!" | "-" ] primary ;
-primary       -> "true" | "false" | "null" | NUM | STR | IDENTIFIER | "(" expression ")"
+<expression> --> <term> ( ('AND'|'OR') <term> )*
+<term> --> <comparison> ( ('='|'!='|'<'|''>'|'<='|>=) <comparison> )*
+<comparison> --> ID | CONST | STR'(' <expression> ')'
+terminals { ID, CONST, '"'string'"', '(', ')' }
 
 RecordType = 'Support
 
 † Missing built in support in the example above
   
 
-## Open Issues
-1. What should the semantics be if the caller does not have access to the field

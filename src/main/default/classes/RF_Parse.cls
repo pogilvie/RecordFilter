@@ -3,11 +3,17 @@ public with sharing class RF_Parse {
     final public List<RF_Token> tokens;
     public Integer index = 0;
     Integer counter = 0;
+    SObject record;
 
-    class RF_ParseException extends Exception { }
+    public class RF_ParseException extends Exception { }
 
     public RF_Parse(List<RF_Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public RF_Parse(List<RF_Token> tokens, SObject record) {
+        this.tokens = tokens;
+        this.record = record;
     }
 
     public RF_Value parse() {
@@ -15,7 +21,6 @@ public with sharing class RF_Parse {
         stack.print();
         return stack.pop();
     }
-
 
     // <expression> --> <term> ( ('AND'|'OR') <term> )*
     // <term> --> <comparison> ( ('='|'!='|'<'|''>'|'<='|>=) <comparison> )*
@@ -49,30 +54,60 @@ public with sharing class RF_Parse {
     public void term() {
         comparison();
         while (isComparisonOperator()) {
-            Decimal left = stack.pop().toNumberVal();
+            RF_Value left = stack.pop();
             RF_Token token = advance();
             comparison();
-            Decimal right = stack.pop().toNumberVal();
+            RF_Value right = stack.pop();
+
+            if (left.type != right.type) {
+                throw new RF_ParseException(
+                    String.format('cannot compare type {0} with type {1}', 
+                    new List<Object> { 
+                        left.type.name(),
+                        right.type.name() 
+                    })
+                );
+            }
+
+            Boolean isNumberType = (left.type == RF_Value.type.NUM);
 
             Boolean result;
             switch on token.type {
                 when EQUAL {
-                    result = left == right;
+                    if (isNumberType)
+                        result = left.toNumberVal() == right.toNumberVal();
+                    else
+                        result = left.toStringVal() == right.toStringVal();
                 }
                 when BANG_EQUAL {
-                    result = left != right;
+                    if (isNumberType)
+                        result = left.toNumberVal() != right.toNumberVal();
+                    else
+                        result = left.toStringVal() != right.toStringVal();
                 }
                 when LESS {
-                    result = left < right;
+                    if (isNumberType)
+                        result = left.toNumberVal() < right.toNumberVal();
+                    else
+                        result = left.toStringVal() < right.toStringVal();
                 }
                 when GREATER {
-                    result = left > right;
+                    if (isNumberType)
+                        result = left.toNumberVal() > right.toNumberVal();
+                    else
+                        result = left.toStringVal() > right.toStringVal();
                 }
                 when LESS_EQUAL {
-                    result = left <= right;
+                    if (isNumberType)
+                        result = left.toNumberVal() <= right.toNumberVal();
+                    else
+                        result = left.toStringVal() <= right.toStringVal();
                 }
                 when GREATER_EQUAL {
-                    result = left >= right;
+                    if (isNumberType)
+                        result = left.toNumberVal() >= right.toNumberVal();
+                    else
+                        result = left.toStringVal() >= right.toStringVal();
                 }
             }
             stack.push(new RF_Value(RF_Value.Type.BOOL, result));
@@ -85,6 +120,10 @@ public with sharing class RF_Parse {
         switch on token.type {
             when IDENTIFIER {
                 match(RF_Token.Type.IDENTIFIER);
+                stack.push(new RF_Value(RF_Value.Type.STR, token.literal));
+            }
+            when STR {
+                match(RF_Token.Type.STR);
                 stack.push(new RF_Value(RF_Value.Type.STR, token.literal));
             }
             when NUM {
@@ -110,6 +149,30 @@ public with sharing class RF_Parse {
                 );
             } 
         }
+    }
+
+    RF_Value resolveIdentifier(RF_Token token) {
+
+        if (record == null) {
+            throw new RF_ParseException(
+                String.format('record required to resolve field: {0}', 
+                    new List<Object> { token.literal 
+                })
+            ); 
+        }
+
+        String field = String.valueOf(token.literal);
+        Object value;
+
+        try {
+            value = record.get(field);
+        } catch (exception e) {
+            throw new RF_ParseException(
+                String.format('field {0} is not valid for record', 
+                    new List<Object> { field })
+            ); 
+        }
+        return new RF_Value(RF_Value.type.STR, value);
     }
 
 
