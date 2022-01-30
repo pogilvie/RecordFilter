@@ -120,7 +120,7 @@ public with sharing class RF_Parse {
         switch on token.type {
             when IDENTIFIER {
                 match(RF_Token.Type.IDENTIFIER);
-                stack.push(new RF_Value(RF_Value.Type.STR, token.literal));
+                stack.push(resolveIdentifier(token));
             }
             when STR {
                 match(RF_Token.Type.STR);
@@ -172,6 +172,14 @@ public with sharing class RF_Parse {
                     new List<Object> { field })
             ); 
         }
+
+        System.debug(
+            String.format(
+                'resolveIdentifier: field {0} has value {1}', 
+                new List<Object> { field, value }
+            )
+        );
+
         return new RF_Value(RF_Value.type.STR, value);
     }
 

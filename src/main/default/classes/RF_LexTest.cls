@@ -36,14 +36,10 @@
 
     @isTest static void string() {
         RF_Lex lex = new RF_Lex('"Hello, World!"');
-        List<RF_Token> tokens = lex.scann();
-        
-        for (RF_Token token : tokens) {
-            System.debug(token);
-            System.assertEquals(token.type, RF_Token.Type.STR);
-            System.assertEquals(token.lexeme, '"Hello, World!"');
-            System.assertEquals(token.literal, 'Hello, World!');
-        }
+        RF_Token token = lex.scann()[0];
+        System.assertEquals(token.type, RF_Token.Type.STR);
+        System.assertEquals(token.lexeme, '"Hello, World!"');
+        System.assertEquals(token.literal, 'Hello, World!');
     }
 
     @isTest static void unterminatedString() {
@@ -53,11 +49,8 @@
 
     @isTest static void number() {
         RF_Lex lex = new RF_Lex('10 3.14159');
-        List<RF_Token> tokens = lex.scann();
-        for (RF_Token token : tokens) {
-            System.debug(token);
-            System.assertEquals(token.type, RF_Token.Type.NUM);
-        }
+        RF_Token token = lex.scann()[0];
+        System.assertEquals(RF_Token.Type.NUM, token.type);
     }
 
     @isTest static void lexemes() {

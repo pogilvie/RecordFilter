@@ -193,6 +193,6 @@ public with sharing class RF_Lex {
             type = RF_Token.Type.IDENTIFIER;
         }
 
-        addToken(type);
+        addToken(type, word);
     }
 }

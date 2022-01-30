@@ -17,8 +17,8 @@ public class RecordFilter {
         System.debug(tokens);
     }
     
-    public Boolean match(SObject obj) {
-        RF_Parse p = new RF_Parse(tokens);
+    public Boolean match(SObject record) {
+        RF_Parse p = new RF_Parse(tokens, record);
         RF_Value result = p.parse();
         return result.toBooleanVal();
     }

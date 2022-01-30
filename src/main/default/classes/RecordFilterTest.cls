@@ -41,9 +41,6 @@
             hitException = true;
         }
         System.assert(hitException);  
-        
-        
-
     }
 
     @isTest static void strings() {
