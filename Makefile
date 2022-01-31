@@ -23,5 +23,17 @@ character:
 debug:
 	sfdx force:apex:log:tail -u recordfilter | grep DEBUG
 
+create:
+	sfdx force:package:create \
+		--name RecordFilter \
+		--packagetype Unlocked \
+		--path src \
+		-v dev
 
-
+# https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4N000000GkWvQAK
+version:
+	sfdx force:package:version:create \
+		--package RecordFilter \
+		--installationkeybypass \
+		--wait 20 \
+		-v dev
