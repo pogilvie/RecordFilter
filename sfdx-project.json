@@ -1,12 +1,19 @@
 {
-  "packageDirectories": [
-    {
-      "path": "src",
-      "default": true
+    "packageDirectories": [
+        {
+            "path": "src",
+            "default": true,
+            "package": "RecordFilter",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT"
+        }
+    ],
+    "name": "sobject-boolean-expression",
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "52.0",
+    "packageAliases": {
+        "RecordFilter": "0Ho4N000000fxSfSAI",
+        "RecordFilter@0.1.0-1": "04t4N000000GkWvQAK"
     }
-  ],
-  "name": "sobject-boolean-expression",
-  "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "52.0"
 }

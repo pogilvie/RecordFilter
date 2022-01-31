@@ -1,19 +1,41 @@
 @isTest class RecordFilterTest {
 
     @testSetup static void setup() {
-        insert new Case(
-            Subject = 'Hello, World!',
-            Origin = 'Web',
-            Description = 'this is a long text area'
-        );
+        insert new List<Case>  {
+            new Case(
+               Subject = 'Hello, World!',
+               Origin = 'Web',
+               Type = 'Electronic',
+               Reason = 'Breakdown',
+               Description = 'this is a long text area'
+           ),
+           new Case(
+                Subject = 'Case Two',
+                Origin = 'Email',
+                Type = 'Mechanical',
+                Reason = 'Breakdown',
+                Description = 'this is case two'
+           ),
+           new Case(
+                Subject = 'Case Three',
+                Origin = 'Web',
+                Type = 'Mechanical',
+                Reason = 'Structural',
+                Description = 'this is case three'
+           )
+        };
     }
 
-    static Case getData() {
-        return [SELECT Id, Subject, Origin, Description FROM Case];
+    static List<Case> getData() {
+        return [SELECT Id, Subject, Origin, Type, Reason, Description FROM Case];
+    }
+
+    static Case getOne() {
+        return [SELECT Id, Subject, Origin, Description FROM Case WHERE Subject = 'Hello, World!'];
     }
 
     @isTest static void positive() {
-        Case cs = getData();
+        Case cs = getOne();
 
         RecordFilter rf = new RecordFilter('true AND true');
         System.assert(rf.match(cs));
@@ -32,7 +54,7 @@
     @isTest static void negative() {
         Boolean hitException = false;
 
-        Case cs = getData();
+        Case cs = getOne();
 
         try {
             RecordFilter rf = new RecordFilter('1 > "hello" ');
@@ -44,11 +66,26 @@
     }
 
     @isTest static void strings() {
-        Case cs = getData();
+        Case cs = getOne();
         RecordFilter rf = new RecordFilter(' "hello" = "hello" ');
         System.debug(rf.match(cs));
 
         rf = new RecordFilter(' "hello" != "world" ');
         System.debug(rf.match(cs));
+    }
+
+    @isTest static void verifyRecord() {
+        List<Case> cases = getData();
+
+        RecordFilter rf = new RecordFilter(
+            ' Origin = "Web" AND Type = "Mechanical" '
+        );
+
+        for (Case cs : cases) {
+            System.debug(String.format('Subject: {0} match: {1}', new List<Object> {
+                cs.Subject,
+                rf.match(cs)
+            }));
+        }
     }
 }
