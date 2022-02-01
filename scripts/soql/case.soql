@@ -1,0 +1,2 @@
+SELECT Id, Subject, Origin, Type, Reason 
+FROM Case
