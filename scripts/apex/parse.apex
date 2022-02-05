@@ -2,7 +2,10 @@
 
 List<Case>  cases = [SELECT Id, Origin, Subject, Type, Reason, Description FROM Case];
 
-RecordFilter rf = new RecordFilter(' Origin = "Web" OR (Origin = "Email" AND Type = "Structural") ');
+
+String expression = ' Origin = "Web" OR (Origin = "Email" AND Type = "Structural") ';
+
+RecordFilter rf = new RecordFilter(expression);
 
 for (Case cs : cases) {
     System.debug(
