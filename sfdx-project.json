@@ -4,8 +4,8 @@
             "path": "src",
             "default": true,
             "package": "RecordFilter",
-            "versionName": "ver 0.1",
-            "versionNumber": "0.1.0.NEXT"
+            "versionName": "ver 1.0",
+            "versionNumber": "1.0.0.NEXT"
         }
     ],
     "name": "sobject-boolean-expression",
@@ -14,6 +14,7 @@
     "sourceApiVersion": "52.0",
     "packageAliases": {
         "RecordFilter": "0Ho4N000000fxSfSAI",
-        "RecordFilter@0.1.0-1": "04t4N000000GkWvQAK"
+        "RecordFilter@0.1.0-1": "04t4N000000GkWvQAK",
+        "RecordFilter@1.0.0-1": "04t4N000000GkX5QAK"
     }
 }
