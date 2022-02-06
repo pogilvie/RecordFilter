@@ -3,6 +3,7 @@ public with sharing class RF_Lex {
     final String source;
     final Integer[] characters;
     final List<RF_Token> tokens = new List<RF_Token>();
+    final RF_SymTable symbolTable;
 
     Integer start = 0;
     Integer current = 0;
@@ -23,7 +24,13 @@ public with sharing class RF_Lex {
         characters = source.getChars();
     }
 
-    public List<RF_token> scann() {
+    public RF_Lex(RF_SymTable symbolTable, String source) {
+        this.symbolTable = symbolTable;
+        this.source = source;
+        characters = source.getChars();
+    }
+
+    public List<RF_token> scan() {
 
         while (!isAtEnd()) {
             start = current;
@@ -191,6 +198,8 @@ public with sharing class RF_Lex {
 
         if (type == null) {
             type = RF_Token.Type.IDENTIFIER;
+            if (symbolTable != null)
+                symbolTable.add(word);
         }
 
         addToken(type, word);

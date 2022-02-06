@@ -14,7 +14,6 @@ public with sharing class RF_SymTable {
         if (field == null) {
             throw new RF_SymTableException('field not found: ' + fieldName);
         }
-
         table.put(fieldName,  new RF_Sym(fieldName, field.getDescribe()));
     }
 
@@ -25,7 +24,12 @@ public with sharing class RF_SymTable {
         if (symbol == null) {
             throw new RF_SymTableException('field not found: ' + fieldName);
         }
-
         return symbol.valueType;
+    }
+
+    public void print() {
+        for (String key : table.keySet()) {
+            System.debug(table.get(key));
+        }
     }
 }

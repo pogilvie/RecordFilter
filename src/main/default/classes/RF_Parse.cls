@@ -1,17 +1,15 @@
 public with sharing class RF_Parse {
     RF_Stack stack = new RF_Stack();
-    final public List<RF_Token> tokens;
+    final List<RF_Token> tokens;
+    final RF_SymTable symbolTable;
     public Integer index = 0;
     Integer counter = 0;
     SObject record;
 
     public class RF_ParseException extends Exception { }
 
-    public RF_Parse(List<RF_Token> tokens) {
-        this.tokens = tokens;
-    }
-
-    public RF_Parse(List<RF_Token> tokens, SObject record) {
+    public RF_Parse(RF_SymTable symbolTable, List<RF_Token> tokens, SObject record) {
+        this.symbolTable = symbolTable;
         this.tokens = tokens;
         this.record = record;
     }
@@ -153,14 +151,6 @@ public with sharing class RF_Parse {
 
     RF_Value resolveIdentifier(RF_Token token) {
 
-        if (record == null) {
-            throw new RF_ParseException(
-                String.format('record required to resolve field: {0}', 
-                    new List<Object> { token.literal 
-                })
-            ); 
-        }
-
         String field = String.valueOf(token.literal);
         Object value;
 
@@ -180,7 +170,7 @@ public with sharing class RF_Parse {
             )
         );
 
-        return new RF_Value(RF_Value.type.STR, value);
+        return new RF_Value(symbolTable.get(field), value);
     }
 
 

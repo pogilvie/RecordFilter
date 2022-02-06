@@ -37,16 +37,16 @@
     @isTest static void positive() {
         Case cs = getOne();
 
-        RecordFilter rf = new RecordFilter('true AND true');
+        RecordFilter rf = new RecordFilter('Case', 'true AND true');
         System.assert(rf.match(cs));
         
-        rf =  new RecordFilter('true OR false');
+        rf =  new RecordFilter('Account', 'true OR false');
         System.assert(rf.match(cs));
         
-        rf = new RecordFilter('true AND true AND (true OR false)');
+        rf = new RecordFilter('Account', 'true AND true AND (true OR false)');
         System.assert(rf.match(cs));
         
-        rf = new RecordFilter('1 > 2 OR true');
+        rf = new RecordFilter('Account', '1 > 2 OR true');
         System.assert(rf.match(cs));
 
     }
@@ -57,7 +57,7 @@
         Case cs = getOne();
 
         try {
-            RecordFilter rf = new RecordFilter('1 > "hello" ');
+            RecordFilter rf = new RecordFilter('Account', '1 > "hello" ');
             System.assert(rf.match(cs));
         } catch (RF_Parse.RF_ParseException e) {
             hitException = true;
@@ -67,10 +67,10 @@
 
     @isTest static void strings() {
         Case cs = getOne();
-        RecordFilter rf = new RecordFilter(' "hello" = "hello" ');
+        RecordFilter rf = new RecordFilter('Account', ' "hello" = "hello" ');
         System.debug(rf.match(cs));
 
-        rf = new RecordFilter(' "hello" != "world" ');
+        rf = new RecordFilter('Account', ' "hello" != "world" ');
         System.debug(rf.match(cs));
     }
 
@@ -78,7 +78,7 @@
         List<Case> cases = getData();
 
         RecordFilter rf = new RecordFilter(
-            ' Origin = "Web" AND Type = "Mechanical" '
+            'Case', ' Origin = "Web" AND Type = "Mechanical" '
         );
 
         for (Case cs : cases) {
