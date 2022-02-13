@@ -50,11 +50,11 @@ public with sharing class RF_Parse {
 
     // <term> --> <comparison> ( ('='|'!='|'<'|''>'|'<='|>=) <comparison> )*
     public void term() {
-        comparison();
+        unary();
         while (isComparisonOperator()) {
             RF_Value left = stack.pop();
             RF_Token token = advance();
-            comparison();
+            unary();
             RF_Value right = stack.pop();
 
             if (left.type != right.type) {
@@ -112,6 +112,28 @@ public with sharing class RF_Parse {
         }
     }
 
+    public void unary() {
+        Boolean isNOT = false;
+
+        if (current().type == RF_Token.Type.BANG) {
+            match(RF_Token.type.BANG);
+            isNot = true;
+        }
+        comparison();
+
+        if (isNot) {
+            RF_Value value = stack.pop();
+            if (value.type != RF_Value.Type.BOOL) {
+                throw new RF_ParseException('Logical not (!) applied to non boolean expression.');
+            }
+            if (value.toBooleanVal()) {
+                stack.push(new RF_Value(RF_Value.Type.BOOL, false));
+            } else {
+                stack.push(new RF_Value(RF_Value.Type.BOOL, true));
+            }
+        }
+    }
+
     // <comparison> --> ID | CONST | '(' <expression> ')'
     public void comparison() {
         RF_Token token = current();
@@ -154,14 +176,7 @@ public with sharing class RF_Parse {
         String field = String.valueOf(token.literal);
         Object value;
 
-        try {
-            value = record.get(field);
-        } catch (exception e) {
-            throw new RF_ParseException(
-                String.format('field {0} is not valid for record', 
-                    new List<Object> { field })
-            ); 
-        }
+        value = record.get(field);
 
         System.debug(
             String.format(
@@ -183,42 +198,10 @@ public with sharing class RF_Parse {
         return token;
     }
 
-    public RF_Token consume(List<RF_Token.Type> types) {
-        RF_Token currentToken = current();
-        if (currentToken == null) {
-            return null;
-        }
-        if (types.contains(currentToken.type)) {
-            index++;
-            return currentToken;
-        } 
-        return null;
-    }
-
     public RF_Token current() {
         if (tokens.size() == index) return null;
 
         return tokens[index];
-    }
-
-    public RF_Token current(String type) {
-        RF_Token token = current();
-        if (token != null && token.type.name() == type) return token;
-
-        return null;
-    }
-
-    public RF_Token peek() {
-        if (tokens.size() <= index + 1) return null;
-
-        return tokens[index + 1];
-    }
-
-    public RF_Token peek(String type) {
-        RF_Token token = peek();
-        if (token != null && token.type.name() == type) return token;
-        
-        return null;
     }
 
     void match(RF_Token.Type type) {
@@ -254,10 +237,11 @@ public with sharing class RF_Parse {
             type == RF_Token.Type.GREATER_EQUAL; 
     }
 
+    @testVisible
     void recursionCheck() {
         if (counter > 15) {
             String msg = String.format(
-                'expression infinite recurtion suspected {0}', new List<Object> { counter }
+                'expression infinite recursion suspected {0}', new List<Object> { counter }
             );
             throw new RF_ParseException(msg);
         }

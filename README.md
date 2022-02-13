@@ -99,7 +99,8 @@ Set the environment variable `DEVHUB` to the user name or alias of your Salesfor
 
 ```
 <expression> --> <term> ( ('AND'|'OR') <term> )*
-<term> --> <comparison> ( ('='|'!='|'<'|''>'|'<='|>=) <comparison> )*
+<term>       --> <unary> ( ('='|'!='|'<'|''>'|'<='|>=) <unary> )*
+<unary>      --> <comparison> | '!'<comparison>
 <comparison> --> IDENTIFER | DECIMAL_NUMBER | STRING'(' <expression> ')'
 terminals { IDENTIFIER, CONST, '"'STRING'"', '(', ')' }
 ```
