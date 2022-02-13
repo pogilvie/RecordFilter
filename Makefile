@@ -35,12 +35,13 @@ create:
 
 install:
 	sfdx force:package:install \
-		--package RecordFilter@1.0.0-1 \
+		--package RecordFilter@1.1.0-1 \
 		--wait 20 -b 20 \
 		-u $(installTarget)
 
 
-# https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4N000000GkX5QAK
+# RecordFilter@1.0.0-1 (version 1.0.0) https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4N000000GkX5QAK
+# RecordFilter@1.1.0-1 (version 1.1.0) https://login.salesforce.com/packaging/installPackage.apexp?p0=04t4N000000GkXPQA0
 version:
 	sfdx force:package:version:create \
 		--package RecordFilter \
