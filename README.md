@@ -105,8 +105,7 @@ Set the environment variable `DEVHUB` to the user name or alias of your Salesfor
 terminals { IDENTIFIER, CONST, '"'STRING'"', '(', ')' }
 ```
 
-## Limitations of the Release 1.0
-- Not operator is not supported  (This is on the short list for 1.1)
+## Limitations of the Release 1.2
 - Date / Datetime types are not supported by the lexer
 - No support for useful built-in operations: For example the operator
   IsNew (<field>) would allow filtering a list of records by records where the
