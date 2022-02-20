@@ -110,5 +110,9 @@ terminals { IDENTIFIER, CONST, '"'STRING'"', '(', ')' }
 - No support for useful built-in operations: For example the operator
   IsNew (<field>) would allow filtering a list of records by records where the
   value of a field had changed.
+
+## WIP Contributions
+- Currently working on integration with GitHub actions to enable community
+  contributions
   
 
