@@ -200,6 +200,58 @@
 
         System.assert(hitException, 'Excepting NOT (!) opererator exception');
     }
+    
+    @isTest static void nullValue() {
+        Account account = new Account(
+            Name = 'Universal Containers',
+            NumberOfEmployees = 12500,
+            AnnualRevenue = 1000000000.0,
+            TickerSymbol = 'UNCO',
+            Industry = 'Shipping'
+        );
+
+        RecordFilter rf = new RecordFilter('Account', 'Phone = null');
+        System.assert(rf.match(account));
+
+        rf = new RecordFilter('Account', 'TickerSymbol != null');
+        System.assert(rf.match(account));
+
+        Boolean hitException = false;
+        try {
+            rf = new RecordFilter('Account', 'TickerSymbol < null');
+            rf.match(account);
+        } catch (RF_Parse.RF_ParseException e) {
+            hitException = true;
+        }
+        System.assert(hitException);
+
+        hitException = false;
+        try {
+            rf = new RecordFilter('Account', 'TickerSymbol > null');
+            rf.match(account);
+        } catch (RF_Parse.RF_ParseException e) {
+            hitException = true;
+        }
+        System.assert(hitException);
+        
+        hitException = false;
+        try {
+            rf = new RecordFilter('Account', 'TickerSymbol <= null');
+            rf.match(account);
+        } catch (RF_Parse.RF_ParseException e) {
+            hitException = true;
+        }
+        System.assert(hitException);
+
+        hitException = false;
+        try {
+            rf = new RecordFilter('Account', 'TickerSymbol >= null');
+            rf.match(account);
+        } catch (RF_Parse.RF_ParseException e) {
+            hitException = true;
+        }
+        System.assert(hitException);
+    }
 
 
 }

@@ -1,8 +1,8 @@
 public class RF_Value {
     class RF_ValueException extends Exception { }
-    public enum Type {NUM, STR, DT, BOOL}
+    public enum Type {NUM, STR, DT, BOOL, NULL_VALUE}
     public Type type;
-    Object value;
+    public Object value;
 
     public RF_Value(RF_Value.type type, Object value) {
         this.type = type;

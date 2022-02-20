@@ -57,7 +57,10 @@ public with sharing class RF_Parse {
             unary();
             RF_Value right = stack.pop();
 
-            if (left.type != right.type) {
+            Boolean isNumberType = (left.type == RF_Value.type.NUM);
+            Boolean isNullType = (left.type == RF_Value.Type.NULL_VALUE || right.type == RF_Value.Type.NULL_VALUE);
+
+            if (!isNullType && left.type != right.type) {
                 throw new RF_ParseException(
                     String.format('cannot compare type {0} with type {1}', 
                     new List<Object> { 
@@ -65,45 +68,55 @@ public with sharing class RF_Parse {
                         right.type.name() 
                     })
                 );
-            }
-
-            Boolean isNumberType = (left.type == RF_Value.type.NUM);
+            } 
 
             Boolean result;
             switch on token.type {
                 when EQUAL {
                     if (isNumberType)
                         result = left.toNumberVal() == right.toNumberVal();
+                    else if (isNullType)
+                        result = right.value == left.value;
                     else
                         result = left.toStringVal() == right.toStringVal();
                 }
                 when BANG_EQUAL {
                     if (isNumberType)
                         result = left.toNumberVal() != right.toNumberVal();
+                    else if (isNullType)
+                        result = right.value != left.value;
                     else
                         result = left.toStringVal() != right.toStringVal();
                 }
                 when LESS {
                     if (isNumberType)
                         result = left.toNumberVal() < right.toNumberVal();
+                    else if (isNullType)
+                        throw new RF_ParseException('Only = and != operators supported for null comparisons');
                     else
                         result = left.toStringVal() < right.toStringVal();
                 }
                 when GREATER {
                     if (isNumberType)
                         result = left.toNumberVal() > right.toNumberVal();
+                    else if (isNullType)
+                        throw new RF_ParseException('Only = and != operators supported for null comparisons');
                     else
                         result = left.toStringVal() > right.toStringVal();
                 }
                 when LESS_EQUAL {
                     if (isNumberType)
                         result = left.toNumberVal() <= right.toNumberVal();
+                    else if (isNullType)
+                        throw new RF_ParseException('Only = and != operators supported for null comparisons');
                     else
                         result = left.toStringVal() <= right.toStringVal();
                 }
                 when GREATER_EQUAL {
                     if (isNumberType)
                         result = left.toNumberVal() >= right.toNumberVal();
+                    else if (isNullType)
+                        throw new RF_ParseException('Only = and != operators supported for null comparisons');
                     else
                         result = left.toStringVal() >= right.toStringVal();
                 }
@@ -158,6 +171,10 @@ public with sharing class RF_Parse {
                 match(RF_Token.Type.FALSE_VALUE);
                 stack.push(new RF_Value(RF_Value.Type.BOOL, false));
             }
+            when NULL_VALUE {
+                match(RF_Token.Type.NULL_VALUE);
+                stack.push(new RF_Value(RF_Value.Type.NULL_VALUE, null));
+            }
             when LEFT_PAREN {
                 match(RF_Token.Type.LEFT_PAREN);
                 expression();
@@ -175,6 +192,7 @@ public with sharing class RF_Parse {
 
         String field = String.valueOf(token.literal);
         Object value;
+        RF_Value.Type type;
 
         value = record.get(field);
 
@@ -185,7 +203,13 @@ public with sharing class RF_Parse {
             )
         );
 
-        return new RF_Value(symbolTable.get(field), value);
+        if (value == null) {
+            type = RF_Value.Type.NULL_VALUE; 
+        } else {
+            type = symbolTable.get(field);
+        }
+
+        return new RF_Value(type, value);
     }
 
 
